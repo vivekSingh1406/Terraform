@@ -38,7 +38,7 @@ resource "aws_instance" "my_ec2" {
     aws_security_group.ec2_sg.name
   ]
 
-  # Root disk
+  # Root diskno
   root_block_device {
     volume_size = 20
     volume_type = "gp3"
