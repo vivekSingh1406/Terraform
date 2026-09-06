@@ -1,10 +1,12 @@
 # Security Group
 resource "aws_security_group" "ec2_sg" {
 
-  name = "my-ec2-security-group"
+  name        = "my-ec2-security-group"
+  description = "Allow SSH and HTTP"
 
   # SSH
   ingress {
+    description = "SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -13,13 +15,14 @@ resource "aws_security_group" "ec2_sg" {
 
   # HTTP
   ingress {
+    description = "HTTP"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow outgoing traffic
+  # Outgoing traffic
   egress {
     from_port   = 0
     to_port     = 0
@@ -28,17 +31,20 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
-# EC2 Instance
+# EC2
 resource "aws_instance" "my_ec2" {
 
   ami           = "ami-0f918f7e67a3323f0"
   instance_type = "t3.micro"
 
-  security_groups = [
-    aws_security_group.ec2_sg.name
+  # Use SG ID
+  vpc_security_group_ids = [
+    aws_security_group.ec2_sg.id
   ]
 
-  # Root diskno
+  # Make sure EC2 gets public IP
+  associate_public_ip_address = true
+
   root_block_device {
     volume_size = 20
     volume_type = "gp3"
@@ -54,7 +60,7 @@ resource "aws_instance" "my_ec2" {
     systemctl enable nginx
     systemctl start nginx
 
-    echo "<h1>Hello From Terraform EC2</h1>" > /usr/share/nginx/html/index.html
+    echo '<h1>Hello From Terraform EC2</h1>' > /usr/share/nginx/html/index.html
   EOF
 
   tags = {
@@ -64,12 +70,10 @@ resource "aws_instance" "my_ec2" {
   }
 }
 
-# Output Public IP
 output "ec2_public_ip" {
   value = aws_instance.my_ec2.public_ip
 }
 
-# Output Instance ID
 output "ec2_instance_id" {
   value = aws_instance.my_ec2.id
 }
