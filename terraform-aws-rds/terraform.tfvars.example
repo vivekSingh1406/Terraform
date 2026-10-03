@@ -1,0 +1,14 @@
+identifier          = "terraform-mysql"
+database_name       = "appdb"
+instance_class      = "db.t3.micro"
+multi_az            = false
+deletion_protection = true
+skip_final_snapshot = false
+
+# Default: private database; use an application in the created VPC.
+publicly_accessible  = false
+allowed_client_cidrs = []
+
+# For a laptop learning exercise, change the two settings above to:
+# publicly_accessible  = true
+# allowed_client_cidrs = ["YOUR_PUBLIC_IPV4/32"]

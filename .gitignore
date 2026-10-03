@@ -4,6 +4,12 @@
 # Terraform lockfile
 .terraform.lock.hcl
 
+# Keep the RDS provider versions reproducible
+!/terraform-aws-rds/.terraform.lock.hcl
+
+# Saved Terraform plans can contain sensitive values
+*.tfplan
+
 # .tfstate files
 
 terraform.tfvars
